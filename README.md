@@ -1,8 +1,8 @@
 # Web-App: Car Directory
 
-This web application is a directory of cars and their manufacturers. By default it uses two SQL data sources: a car directory and a manufacturer directory.
+This web application is a directory of cars and their manufacturers. By default it uses two SQL data sources: a **Car Directory** and a **Manufacturer directory**.
 
-## Directory
+## Directories
 
 - Car Directory
 - Manufacturer Directory

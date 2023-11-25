@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - changeSet:
+      - changes:
+          -
+  - includeAll:
+      path: db/changelog/car-directory

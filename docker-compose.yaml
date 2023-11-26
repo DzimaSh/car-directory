@@ -12,15 +12,15 @@ services:
     env_file:
       - .env/postgres.env
     volumes:
-      - ./provision/docker/postgres/postgres.conf:/var/lib/postgresql/data/postgresql.conf
+      - ./provision/docker/postgres/init_scripts:/docker-entrypoint-initdb.d
     ports:
-      - '5432:5432'
+      - "127.0.0.1:5432:5432"
     networks:
       - car_directory
 
-  backend:
-    container_name: backend.local
-    ports:
-      - '8080:8080'
-    networks:
-      - car_directory
+#  backend:
+#    container_name: backend.local
+#    ports:
+#      - '8080:8080'
+#    networks:
+#      - car_directory

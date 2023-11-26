@@ -3,10 +3,9 @@ FROM alpine:edge
 ENV PROJECT_PATH=/source
 
 RUN apk update && \
-    apk add gradle openjdk21
+    apk add openjdk21 gradle
 
-WORKDIR PROJECT_PATH
+VOLUME ["$PROJECT_PATH"]
+WORKDIR $PROJECT_PATH
 
-RUN gradle build
-
-CMD ["./gradlew", "bootStart"]
+CMD gradle bootRun

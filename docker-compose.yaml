@@ -14,7 +14,7 @@ services:
     volumes:
       - ./provision/docker/postgres/init_scripts:/docker-entrypoint-initdb.d
     ports:
-      - "127.0.0.1:5432:5432"
+      - '127.0.0.1:5432:5432'
     networks:
       - car_directory
 
@@ -22,7 +22,7 @@ services:
     container_name: backend.local
     build:
       dockerfile: provision/docker/backend/Dockerfile
-    image: car-directory.backend:latest
+    image: car-directory-backend:latest
     env_file:
       - .env/postgres.env
       - .env/backend.env

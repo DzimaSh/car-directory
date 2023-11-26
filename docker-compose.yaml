@@ -1,0 +1,26 @@
+version: '3.6'
+
+networks:
+  car_directory:
+    name: car_directory
+
+
+services:
+  postgres:
+    container_name: db.local
+    image: postgres:latest
+    env_file:
+      - .env/postgres.env
+    volumes:
+      - ./provision/docker/postgres/postgres.conf:/var/lib/postgresql/data/postgresql.conf
+    ports:
+      - '5432:5432'
+    networks:
+      - car_directory
+
+  backend:
+    container_name: backend.local
+    ports:
+      - '8080:8080'
+    networks:
+      - car_directory

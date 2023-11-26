@@ -18,9 +18,19 @@ services:
     networks:
       - car_directory
 
-#  backend:
-#    container_name: backend.local
-#    ports:
-#      - '8080:8080'
-#    networks:
-#      - car_directory
+  backend:
+    container_name: backend.local
+    build:
+      dockerfile: provision/docker/backend/Dockerfile
+    image: car-directory.backend:latest
+    env_file:
+      - .env/postgres.env
+      - .env/backend.env
+    volumes:
+      - ./backend:/source
+    depends_on:
+      - postgres
+    ports:
+      - '8080:8080'
+    networks:
+      - car_directory

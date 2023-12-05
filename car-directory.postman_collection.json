@@ -1,0 +1,158 @@
+{
+	"info": {
+		"_postman_id": "00d8d57d-b7ef-4f47-82c0-ac104e9fa9d9",
+		"name": "car-directory",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "19786201"
+	},
+	"item": [
+		{
+			"name": "cars",
+			"item": [
+				{
+					"name": "GET Car by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cars_url}}/:id",
+							"host": [
+								"{{cars_url}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Cars",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{cars_url}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Car",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"model\": \"Example Model 2\",\r\n    \"releaseDate\": \"2023-12-05\",\r\n    \"fuelEfficiency\": 30.5,\r\n    \"manufacturer\": \"{{manufacturers_url}}/1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{cars_url}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Car",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"model\": \"Updated Model\",\r\n   \"releaseDate\": \"2023-12-05\",\r\n   \"fuelEfficiency\": 3321\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{cars_url}}/:id",
+							"host": [
+								"{{cars_url}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Car",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{cars_url}}/:id",
+							"host": [
+								"{{cars_url}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "### Car API Collection\n\nThis collection contains a set of HTTP requests to interact with the Car API. The API provides endpoints to manage car entities, including retrieving, creating, updating, and deleting cars.\n\n#### Environment Variables:\n\n- **cars_url:** Your Car API base URL\n    \n\n#### Requests:\n\n1. **GET All Cars**\n    - Retrieve a list of all cars available in the database.\n2. **GET Car by ID**\n    - Retrieve details of a specific car by providing its unique identifier.\n3. **Create a Car**\n    - Add a new car to the database by providing necessary details such as model, release date, fuel efficiency, and manufacturer information.\n4. **Update a Car**\n    - Modify the details of an existing car using its ID. Update information such as model, release date, fuel efficiency, and manufacturer details.\n5. **Delete a Car**\n    - Remove a specific car from the database by providing its unique identifier.\n\n---\n\nThis collection allows easy testing and interaction with the Car API endpoints, facilitating CRUD operations for managing car entities. Adjust the `cars_url` environment variable according to your API's base URL before executing the requests."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "cars_url",
+			"value": "{{base_url}}/cars",
+			"type": "string"
+		},
+		{
+			"key": "manufacturers_url",
+			"value": "{{base_url}}/manufacturers",
+			"type": "string"
+		}
+	]
+}

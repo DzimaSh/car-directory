@@ -1,5 +1,5 @@
---changeset dzmitry.shushkevich@gmail.com:1
---comment: Initialize database
+-- changeset dzmitry.shushkevich@gmail.com:1
+-- comment: Initialize database
 
 -- Manufacturer Directory Table
 CREATE SEQUENCE IF NOT EXISTS manufacturer_id_seq
@@ -8,7 +8,7 @@ CREATE SEQUENCE IF NOT EXISTS manufacturer_id_seq
 CREATE TABLE manufacturer
 (
     id                BIGINT PRIMARY KEY,
-    name              VARCHAR(100) UNIQUE,
+    name              VARCHAR(100) UNIQUE NOT NULL,
     country           VARCHAR(100),
     foundation_date   DATE,
     employees_number  INT
@@ -24,10 +24,10 @@ CREATE SEQUENCE IF NOT EXISTS car_id_seq
 CREATE TABLE car
 (
     id              BIGINT PRIMARY KEY,
-    model           VARCHAR(100),
+    model           VARCHAR(100) NOT NULL,
     release_date    TIMESTAMP WITHOUT TIME ZONE,
     fuel_efficiency REAL,
-    manufacturer_id BIGINT REFERENCES manufacturer(id)
+    manufacturer_id BIGINT REFERENCES manufacturer(id) NOT NULL
 );
 
 ALTER TABLE car ALTER id

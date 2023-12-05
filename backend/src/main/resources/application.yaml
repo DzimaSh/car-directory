@@ -2,6 +2,10 @@ server:
   port: ${SERVER_PORT:8080}
 
 spring:
+  data:
+    rest:
+      base-path: api
+
   application:
     name: car-directory
 
@@ -20,12 +24,13 @@ spring:
 
       format_sql: true
 
-    show-sql: true
+    show-sql: false
 
   liquibase:
     change-log: db/changelog/db.changelog-master.yaml
-    default-schema: ${POSTGRES_DEFAULT_SCHEMA}
+    default-schema: ${POSTGRES_DEFAULT_SCHEMA:car_directory}
 
 logging:
   level:
-    org.hibernate.SQL: debug
+    org.hibernate.SQL: info
+    by.bsu.cardirectory: info

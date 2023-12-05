@@ -1,6 +1,6 @@
 # Web-App: Car Directory
 
-This web application is a directory of cars and their manufacturers. By default it uses two SQL data sources: a **Car Directory** and a **Manufacturer directory**.
+This web application is a directory of cars and their manufacturers. By default, it uses two SQL data sources: a **Car Directory** and a **Manufacturer directory**.
 
 ## Directories
 
@@ -35,7 +35,7 @@ To start the application using Docker Compose, follow these steps:
 1. Ensure Docker and Docker Compose are installed on your machine.
 2. Clone the repository: `git clone <repository-url>`
 3. Navigate to the project directory: `cd <project-directory>`
-4. Adjust and add necessary environment variables changing `.env` files placed in `.env\ `
+4. (Optional) Adjust environment variables changing `*.env` files placed in `provision\docker\env ` directory
 5. Run the following command to start the application:
    ```bash
    docker-compose up -d
@@ -61,11 +61,22 @@ To ensure the migrations are applied:
 
 After you've started your application and the migrations have been applied, you can check the status of these migrations using `psql`. Here are the steps:
 
-1. Connect to your database using `psql`. You might need to provide the host, port, username, and password depending on your configuration. The command might look like this: `psql -h localhost -p 5432 -U yourusername -W`.
-2. Once connected, switch to your database using the `\c yourdatabase` command.
-3. Now you can check the status of your migrations. Since you're using Liquibase, you can check the `DATABASECHANGELOG` table to see which migrations have been applied: `SELECT * FROM DATABASECHANGELOG;`.
+1. Connect to your database using `psql`. You might need to provide the host, port, username, and password depending on your configuration. The command might look like this
+   ```bash
+   psql -h localhost -p 5432 -U car_directory
+   ```
+2. Once connected, switch to your database using the
+   ```bash
+   \c car_directory
+   ```
+3. Now you can check the status of your migrations. Since you're using Liquibase, you can check the `databasechangelog` table to see which migrations have been applied:
+   ```sql
+   SELECT * FROM databasechangelog;
+   ```
 
 Remember to verify the migration logs or any application logs that indicate the status of migration execution to ensure the database schema is set up correctly.
+
+*Note: `car_directory` is the default label for both the PostgreSQL username and database name. If you have provided other environment variables, you should replace `car_directory` with your input.*
 
 ## Contributing
 

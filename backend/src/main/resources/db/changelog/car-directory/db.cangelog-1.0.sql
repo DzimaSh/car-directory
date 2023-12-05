@@ -1,5 +1,5 @@
---changeset dzmitry.shushkevich@gmail.com:1
---comment: Initialize database
+-- changeset dzmitry.shushkevich@gmail.com:1
+-- comment: Initialize database
 
 -- Manufacturer Directory Table
 CREATE SEQUENCE IF NOT EXISTS manufacturer_id_seq

@@ -35,7 +35,7 @@ To start the application using Docker Compose, follow these steps:
 1. Ensure Docker and Docker Compose are installed on your machine.
 2. Clone the repository: `git clone <repository-url>`
 3. Navigate to the project directory: `cd <project-directory>`
-4. (Optional) Adjust environment variables changing `*.env` files placed in `provision\docker\env ` directory
+4. (Optional) Adjust environment variables changing `*.env` files placed in `provision\docker\env` directory
 5. Run the following command to start the application:
    ```bash
    docker-compose up -d
@@ -66,6 +66,8 @@ After you've started your application and the migrations have been applied, you 
    psql -h localhost -p 5432 -U car_directory -W
    ```
    The default password is `StrongPassword123!`.
+
+   *Note: If you have provided other environment variables, you should replace `StrongPassword123!` with your input.*
 2. Once connected, switch to your database using the
    ```bash
    \c car_directory

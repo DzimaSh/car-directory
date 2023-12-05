@@ -63,8 +63,9 @@ After you've started your application and the migrations have been applied, you 
 
 1. Connect to your database using `psql`. You might need to provide the host, port, username, and password depending on your configuration. The command might look like this
    ```bash
-   psql -h localhost -p 5432 -U car_directory
+   psql -h localhost -p 5432 -U car_directory -W
    ```
+   The default password is `StrongPassword123!`.
 2. Once connected, switch to your database using the
    ```bash
    \c car_directory

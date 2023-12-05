@@ -8,9 +8,11 @@ networks:
 services:
   postgres:
     container_name: db.local
-    image: postgres:latest
+    build:
+      dockerfile: provision/docker/postgres/Dockerfile
+    image: car-directory-db:latest
     env_file:
-      - .env/postgres.env
+      - provision/env/postgres.env
     volumes:
       - ./provision/docker/postgres/init_scripts:/docker-entrypoint-initdb.d
     ports:
@@ -24,8 +26,8 @@ services:
       dockerfile: provision/docker/backend/Dockerfile
     image: car-directory-backend:latest
     env_file:
-      - .env/postgres.env
-      - .env/backend.env
+      - provision/env/postgres.env
+      - provision/env/backend.env
     volumes:
       - ./backend:/source
     depends_on:

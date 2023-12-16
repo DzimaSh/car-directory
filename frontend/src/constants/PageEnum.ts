@@ -1,3 +1,5 @@
 export enum PageEnum {
-    Home= '/',
+    Home = '/',
+    Manufacturers = '/manufacturers',
+    Cars = '/cars',
 }

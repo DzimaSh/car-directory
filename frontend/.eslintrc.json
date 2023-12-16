@@ -35,6 +35,14 @@
         "tsx": "never"
       }
     ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["**/*.test.ts", "**/*.test.tsx", "./src/setupTests.ts", "./config-overrides.js"],
+        "optionalDependencies": false,
+        "peerDependencies": false
+      }
+    ],
     "no-shadow": "off"
   },
   "settings": {

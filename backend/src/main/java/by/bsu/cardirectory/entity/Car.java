@@ -2,6 +2,7 @@ package by.bsu.cardirectory.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -20,9 +21,12 @@ public class Car {
             strategy = GenerationType.SEQUENCE,
             generator = "car_id_seq"
     )
+    @RestResource
     private Long id;
 
     private String model;
+
+    private String description;
 
     private Date releaseDate;
 

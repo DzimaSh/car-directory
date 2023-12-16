@@ -3,6 +3,7 @@ package by.bsu.cardirectory.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -21,6 +22,7 @@ public class Manufacturer {
             strategy = GenerationType.SEQUENCE,
             generator = "manufacturer_id_seq"
     )
+    @RestResource
     private Long id;
 
     @Column(unique = true)

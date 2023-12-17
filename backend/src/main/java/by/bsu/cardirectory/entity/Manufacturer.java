@@ -32,7 +32,10 @@ public class Manufacturer {
 
     private Integer employeesNumber;
 
-    @OneToMany(mappedBy = "manufacturer", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "manufacturer",
+            fetch = FetchType.EAGER
+    )
     @JsonIgnore
     private List<Car> cars;
 }

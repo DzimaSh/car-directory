@@ -30,7 +30,11 @@ public class Car {
 
     private Double fuelEfficiency;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.REFRESH,
+    }, fetch = FetchType.EAGER)
     @JoinColumn(name = "manufacturer_id")
     @ToString.Exclude
     private Manufacturer manufacturer;

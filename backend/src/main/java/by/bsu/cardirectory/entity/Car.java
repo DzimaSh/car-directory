@@ -1,15 +1,10 @@
 package by.bsu.cardirectory.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import org.springframework.data.rest.core.annotation.RestResource;
+import lombok.ToString;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.Date;
 
@@ -27,7 +22,6 @@ public class Car {
             strategy = GenerationType.SEQUENCE,
             generator = "car_id_seq"
     )
-    @Getter(onMethod_ = @RestResource(exported = true))
     private Long id;
 
     private String model;
@@ -38,6 +32,8 @@ public class Car {
 
     private Double fuelEfficiency;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "manufacturer_id")
+    @ToString.Exclude
     private Manufacturer manufacturer;
 }

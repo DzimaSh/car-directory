@@ -1,25 +1,67 @@
 import React from 'react';
-import { Box, TextField } from '@mui/material';
+import {
+  Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField,
+} from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useQuery } from 'react-query';
+import { get } from 'lodash';
+import { useParams } from 'react-router-dom';
 import { ICar } from '../../interfaces/car';
-import { Details } from '../../components';
+import { Details, Loader } from '../../components';
 import { EditorContext } from '../../components/Details';
-
-const carMock: ICar = {
-  id: -1,
-  model: '',
-  description: null,
-  releaseDate: '',
-  fuelEfficiency: 0,
-};
+import Api, { projections } from '../../api';
+import { IManufacturer } from '../../interfaces/manufacturer';
+import { findByName } from '../../utils/helpers';
+import { getApiManufacturerLink } from '../../utils/links';
 
 const CarDetails: React.FC = () => {
-  const [car, setCar] = React.useState<ICar>(carMock);
+  const routeParams = useParams<{ id: string }>();
+
+  const [car, setCar] = React.useState<ICar>();
+  const [manufacturers, setManufacturers] = React.useState<IManufacturer[]>([]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+
+  const { isFetched: isManufacturersFetched } = useQuery(
+    ['manufacturers'],
+    () => Api.Manufacturer.getAllManufacturers({ projection: projections.manufacturer.summary }),
+    {
+      onSuccess: ({ data }) => {
+        setManufacturers(get(data, '_embedded.manufacturers', []));
+      },
+    },
+  );
+
+  const { isFetched: isCarFetched } = useQuery(
+    [routeParams.id, 'car'],
+    () => Api.Car.getCarById(parseInt(routeParams.id as string, 10), {
+      projection: projections.car.enriched,
+    }),
+    {
+      onSuccess: ({ data }) => {
+        setCar(data);
+      },
+    },
+  );
+
+  React.useEffect(() => {
+    setIsLoading(!(isCarFetched && isManufacturersFetched));
+  }, [car, isCarFetched, isManufacturersFetched]);
 
   const handleSave = (newCar: ICar): void => {
-    setCar({ ...newCar });
+    if (typeof car !== 'undefined') {
+      Api.Car.updateCar(
+        car.id,
+        {
+          ...newCar,
+          manufacturer: getApiManufacturerLink(newCar.manufacturer?.id as number),
+        },
+      )
+        .then(({ data }) => {
+          setCar({ ...data });
+        });
+    }
   };
 
   const context: EditorContext<ICar>[] = [
@@ -33,6 +75,7 @@ const CarDetails: React.FC = () => {
         handleChange: (newCar: Partial<ICar>) => void,
       ): React.ReactNode => (
         <TextField
+          className="edit-component"
           InputProps={{
             readOnly: !editMode,
           }}
@@ -54,6 +97,7 @@ const CarDetails: React.FC = () => {
         handleChange: (newCar: Partial<ICar>) => void,
       ): React.ReactNode => (
         <TextField
+          className="edit-component"
           InputProps={{
             readOnly: !editMode,
           }}
@@ -75,14 +119,14 @@ const CarDetails: React.FC = () => {
         handleEdit: (key: keyof ICar) => void,
         handleChange: (newCar: Partial<ICar>) => void,
       ): React.ReactNode => (
-        <Box onClick={() => handleEdit('releaseDate')}>
+        <Box className="edit-component" onClick={() => handleEdit('releaseDate')}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               readOnly={!editMode}
               value={dayjs(carCopy.releaseDate)}
               onChange={(e: Dayjs | null): void => {
                 if (e !== null) {
-                  handleChange({ releaseDate: e.locale() });
+                  handleChange({ releaseDate: e.toDate().toISOString() });
                 }
               }}
             />
@@ -100,6 +144,7 @@ const CarDetails: React.FC = () => {
         handleChange: (newCar: Partial<ICar>) => void,
       ): React.ReactNode => (
         <TextField
+          className="edit-component"
           InputProps={{
             readOnly: !editMode,
           }}
@@ -115,23 +160,51 @@ const CarDetails: React.FC = () => {
     {
       key: 'manufacturer',
       header: 'Manufacturer',
-      renderComponent: (_, carCopy: ICar): React.ReactNode => (
-        <TextField
-          disabled
-          value={carCopy.manufacturer?.name}
-        />
+      renderComponent: (
+        editMode: boolean,
+        carCopy: ICar,
+        handleEdit: (key: keyof ICar) => void,
+        handleChange: (newCar: Partial<ICar>) => void,
+      ): React.ReactNode => (
+        <FormControl className="edit-component">
+          <InputLabel id="demo-simple-select-label">Manufacturer</InputLabel>
+          <Select
+            readOnly={!editMode}
+            onChange={(e: SelectChangeEvent): void => {
+              handleChange({
+                manufacturer: findByName<IManufacturer>(manufacturers, e?.target.value),
+              });
+            }}
+            label="Manufacturer"
+            error={typeof carCopy.manufacturer === 'undefined'}
+            value={carCopy.manufacturer?.name}
+            defaultValue={car?.manufacturer?.name}
+            onClick={() => handleEdit('manufacturer')}
+          >
+            {manufacturers.map((manufacturer) => (
+              <MenuItem key={manufacturer.id} value={manufacturer.name}>
+                {manufacturer.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       ),
-      notEditable: true,
     },
   ];
 
   return (
-    <Details<ICar>
-      header="Car"
-      object={car}
-      onSave={handleSave}
-      context={context}
-    />
+    <>
+      {typeof car === 'undefined'
+        ? <Loader bigger /> : (
+          <Details<ICar>
+            header="Car"
+            object={car}
+            onSave={handleSave}
+            context={context}
+            isLoading={isLoading}
+          />
+        )}
+    </>
   );
 };
 

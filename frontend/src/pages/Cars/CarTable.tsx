@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Table, { HeaderContext } from '../../components/Table';
 import { ICar, ICarValues } from '../../interfaces/car';
+import { IManufacturer } from '../../interfaces/manufacturer';
 
 interface ICarTable {
   carsData: ICar[];
@@ -45,14 +46,13 @@ const CarTable: React.FC<ICarTable> = ({ carsData }) => {
 
   const renderValue = (car: ICar, key: keyof ICar): React.ReactNode => {
     const value: ICarValues = car[key];
-    switch (typeof value) {
-      case 'number':
-      case 'string':
-        return prepareValue(value ?? null);
-      case 'object':
-        return prepareValue(value?.name ?? null);
+    switch (key) {
+      case 'releaseDate':
+        return prepareValue(new Date(value as string).toLocaleDateString());
+      case 'manufacturer':
+        return prepareValue(value ? (value as IManufacturer).name : null);
       default:
-        return prepareValue(null);
+        return prepareValue(value as string | number);
     }
   };
 

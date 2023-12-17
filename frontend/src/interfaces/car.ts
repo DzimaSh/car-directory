@@ -10,3 +10,11 @@ export interface ICar extends IEntity {
 }
 
 export type ICarValues = ICar[keyof ICar];
+
+export interface ICarPayload {
+  model: string;
+  description: string | null;
+  releaseDate: string;
+  fuelEfficiency: number;
+  manufacturer?: string;
+}

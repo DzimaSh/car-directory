@@ -5,6 +5,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import { Cancel } from '@mui/icons-material';
 import { IEntity } from '../interfaces/entity';
+import { Loader } from './index';
 
 export type EditorContext<T extends IEntity> =
   {
@@ -24,6 +25,7 @@ interface IDetails<T extends IEntity> {
   object: T;
   onSave: (obj: T) => void;
   context: EditorContext<T>[];
+  isLoading: boolean;
 }
 
 const Details = <T extends IEntity, >({
@@ -31,6 +33,7 @@ const Details = <T extends IEntity, >({
   object,
   onSave,
   context,
+  isLoading,
 }: IDetails<T>): React.ReactElement<IDetails<T>> => {
   const [editingKey, setEditingKey] = useState<keyof T | null>(null);
   const [objCopy, setObjCopy] = React.useState<T>(object);
@@ -60,9 +63,9 @@ const Details = <T extends IEntity, >({
   };
 
   return (
-    <Container className="car-details">
+    <Container className="details">
       <Typography variant="h3" sx={{ mb: 2 }}>{header}</Typography>
-      {context.map((fieldContext) => {
+      {isLoading ? <Loader /> : context.map((fieldContext) => {
         const editMode = editingKey === fieldContext.key as string;
 
         return (

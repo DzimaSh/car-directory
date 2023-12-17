@@ -1,12 +1,23 @@
 import { AxiosResponse } from 'axios';
-import { ICar } from '../interfaces/car';
+import { ICar, ICarPayload } from '../interfaces/car';
 import request from '../utils/request';
+import { projections } from './index';
+
+interface ICarRequest {
+  projection?: string;
+}
 
 const Car = {
   getAllCars: (): Promise<AxiosResponse<ICar[]>> => request.get('cars'),
-  getCarById: (id: number): Promise<AxiosResponse<ICar>> => request.get(`cars/${id}`),
-  createCar: (car: ICar): Promise<AxiosResponse<ICar>> => request.post('cars', car),
-  updateCar: (id: number, car: ICar): Promise<AxiosResponse<ICar>> => request.put(`/cars/${id}`, car),
+  getCarById: (id: number, params?: ICarRequest): Promise<AxiosResponse<ICar>> => request.get(`cars/${id}`, {
+    params,
+  }),
+  createCar: (car: ICarPayload): Promise<AxiosResponse<ICar>> => request.post('cars', car),
+  updateCar: (id: number, car: ICarPayload): Promise<AxiosResponse<ICar>> => request.put(`/cars/${id}`, car, {
+    params: {
+      projection: projections.car.enriched,
+    },
+  }),
   deleteCar: (id: number): Promise<AxiosResponse<void>> => request.delete(`/cars/${id}`),
 };
 

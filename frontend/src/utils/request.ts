@@ -1,10 +1,8 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { API_V1_BASE_URL } from '../constants/settings';
 
-export type RequestResponse = AxiosResponse;
-
 export const objToParams = (
-  obj: Record<string, any>,
+  obj: Record<string, string> | string[][],
 ): URLSearchParams => new URLSearchParams(obj);
 
 const request = axios.create({

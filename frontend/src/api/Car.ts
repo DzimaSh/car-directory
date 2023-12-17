@@ -12,8 +12,12 @@ const Car = {
   getCarById: (id: number, params?: ICarRequest): Promise<AxiosResponse<ICar>> => request.get(`cars/${id}`, {
     params,
   }),
-  createCar: (car: ICarPayload): Promise<AxiosResponse<ICar>> => request.post('cars', car),
-  updateCar: (id: number, car: ICarPayload): Promise<AxiosResponse<ICar>> => request.put(`/cars/${id}`, car, {
+  createCar: (car: ICarPayload): Promise<AxiosResponse<ICar>> => request.post('cars', car, {
+    params: {
+      projection: projections.car.enriched,
+    },
+  }),
+  updateCar: (id: number, car: ICarPayload): Promise<AxiosResponse<ICar>> => request.patch(`/cars/${id}`, car, {
     params: {
       projection: projections.car.enriched,
     },

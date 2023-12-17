@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table, { HeaderContext } from '../../components/Table';
+import Table from '../../components/Table';
 import { ICar, ICarValues } from '../../interfaces/car';
 import { IManufacturer } from '../../interfaces/manufacturer';
+import { ActionEnum } from '../../constants/PageEnum';
+import { HeaderContext } from '../../interfaces/components';
 
 interface ICarTable {
   carsData: ICar[];
@@ -57,7 +59,11 @@ const CarTable: React.FC<ICarTable> = ({ carsData }) => {
   };
 
   const handleRowClick = (carId: number): void => {
-    navigate(`${carId}`);
+    navigate(`${ActionEnum.Edit}/${carId}`);
+  };
+
+  const handleCreateNewCarClick = (): void => {
+    navigate(`${ActionEnum.Create}`);
   };
 
   return (
@@ -66,6 +72,7 @@ const CarTable: React.FC<ICarTable> = ({ carsData }) => {
       renderValue={renderValue}
       head={head}
       onRowClick={handleRowClick}
+      onCreateNewItem={handleCreateNewCarClick}
     />
   );
 };

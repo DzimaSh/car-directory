@@ -7,33 +7,12 @@ import { Cancel } from '@mui/icons-material';
 import { IEntity } from '../interfaces/entity';
 import { Loader } from './index';
 import DeleteButton from './common/DeleteButton';
-
-export type EditorContext<T extends IEntity> =
-  {
-    key: keyof T,
-    header: string,
-    renderComponent: (
-      editMode: boolean,
-      objCopy: T,
-      handleEdit: (key: keyof T) => void,
-      handleChange: (newObject: Partial<T>) => void,
-    ) => React.ReactNode
-    notEditable?: boolean,
-  };
-
-interface IDetails<T extends IEntity> {
-  header: string;
-  object: T;
-  onSave: (obj: T) => void;
-  onDelete: (objId: number) => void;
-  context: EditorContext<T>[];
-  isLoading: boolean;
-}
+import { IDetails } from '../interfaces/components';
 
 const Details = <T extends IEntity, >({
   header,
   object,
-  onSave,
+  onUpdate,
   onDelete,
   context,
   isLoading,
@@ -49,8 +28,8 @@ const Details = <T extends IEntity, >({
     setEditingKey(key);
   };
 
-  const handleSave = (): void => {
-    onSave(objCopy);
+  const handleUpdate = (): void => {
+    onUpdate(objCopy);
     setEditingKey(null);
   };
 
@@ -94,7 +73,7 @@ const Details = <T extends IEntity, >({
               <>
                 {editMode ? (
                   <>
-                    <Button variant="contained" color="primary" onClick={handleSave} className="button">
+                    <Button variant="contained" color="primary" onClick={handleUpdate} className="button">
                       Save
                     </Button>
                     <IconButton onClick={handleCancel}>

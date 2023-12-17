@@ -8,14 +8,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useQuery } from 'react-query';
 import { get } from 'lodash';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ICar } from '../../interfaces/car';
-import { Details, Loader } from '../../components';
-import { EditorContext } from '../../components/Details';
-import Api, { projections } from '../../api';
-import { IManufacturer } from '../../interfaces/manufacturer';
-import { findByName } from '../../utils/helpers';
-import { getApiManufacturerLink } from '../../utils/links';
-import { PageEnum } from '../../constants/PageEnum';
+import { ICar } from '../../../interfaces/car';
+import { Details, Loader } from '../../../components';
+import Api, { projections } from '../../../api';
+import { IManufacturer } from '../../../interfaces/manufacturer';
+import { findByName } from '../../../utils/helpers';
+import { getApiManufacturerLink } from '../../../utils/links';
+import { PageEnum } from '../../../constants/PageEnum';
+import { EditorContext } from '../../../interfaces/components';
 
 const CarDetails: React.FC = () => {
   const routeParams = useParams<{ id: string }>();
@@ -51,7 +51,7 @@ const CarDetails: React.FC = () => {
     setIsLoading(!(isCarFetched && isManufacturersFetched));
   }, [car, isCarFetched, isManufacturersFetched]);
 
-  const handleSave = (newCar: ICar): void => {
+  const handleUpdate = (newCar: ICar): void => {
     if (typeof car !== 'undefined') {
       Api.Car.updateCar(
         car.id,
@@ -188,7 +188,6 @@ const CarDetails: React.FC = () => {
             label="Manufacturer"
             error={typeof carCopy.manufacturer === 'undefined'}
             value={carCopy.manufacturer?.name}
-            defaultValue={car?.manufacturer?.name}
             onClick={() => handleEdit('manufacturer')}
           >
             {manufacturers.map((manufacturer) => (
@@ -209,7 +208,7 @@ const CarDetails: React.FC = () => {
           <Details<ICar>
             header="Car"
             object={car}
-            onSave={handleSave}
+            onUpdate={handleUpdate}
             onDelete={handleDelete}
             context={context}
             isLoading={isLoading}
@@ -219,4 +218,4 @@ const CarDetails: React.FC = () => {
   );
 };
 
-export default CarDetails;
+export default React.memo(CarDetails);

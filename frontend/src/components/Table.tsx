@@ -9,35 +9,18 @@ import {
   Paper,
   TableSortLabel,
   TablePagination,
-  Grid, Typography,
+  Grid, Typography, Button,
 } from '@mui/material';
 import { ROWS_PER_PAGE_OPTIONS } from '../constants/settings';
 import { IEntity } from '../interfaces/entity';
-
-export type HeaderContext<T extends IEntity> = {
-  key: keyof T,
-  header: string,
-  sortable: boolean
-  customSort?: (a: T, b: T) => number;
-};
-
-interface ITable<T extends IEntity> {
-  data: T[];
-  head: HeaderContext<T>[];
-  renderValue: (obj: T, key: keyof T) => React.ReactNode;
-  onRowClick: (id: number) => void;
-}
-
-interface ISortingConfig<T extends IEntity> {
-  key: keyof T;
-  direction: 'asc' | 'desc';
-}
+import { ISortingConfig, ITable } from '../interfaces/components';
 
 const Table = <T extends IEntity, >({
   data,
   head,
   renderValue,
   onRowClick,
+  onCreateNewItem,
 }: ITable<T>): React.ReactElement<ITable<T>> => {
   const [sortConfig, setSortConfig] = React.useState<ISortingConfig<T> | null>(null);
   const [page, setPage] = React.useState<number>(0);
@@ -58,7 +41,7 @@ const Table = <T extends IEntity, >({
     return 0;
   });
 
-  const handleSort = (key: keyof T) => {
+  const handleSort = (key: keyof T): void => {
     let direction: 'asc' | 'desc' = 'asc';
     if (sortConfig !== null && sortConfig.key === key && sortConfig.direction === 'asc') {
       direction = 'desc';
@@ -81,53 +64,62 @@ const Table = <T extends IEntity, >({
   };
 
   return (
-    <Paper>
-      <TableContainer>
-        <MuiTable>
-          <TableHead>
-            <TableRow>
-              {head.map((headContext) => (
-                <TableCell>
-                  {headContext.sortable ? (
-                    <TableSortLabel
-                      active={sortConfig?.key === headContext.key}
-                      direction={sortConfig?.key === headContext.key
-                        ? sortConfig?.direction
-                        : undefined}
-                      onClick={() => handleSort(headContext.key)}
-                    >
-                      <Typography>{headContext.header}</Typography>
-                    </TableSortLabel>
-                  ) : (
-                    headContext.header
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {sortedData
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((obj) => (
-                <TableRow className="table-row" key={obj.id} onClick={() => onRowClick(obj.id)}>
-                  {head.map((header) => (
-                    <TableCell>{renderValue(obj, header.key as keyof T)}</TableCell>
+    <Grid container direction="column" spacing={2}>
+      <Grid item>
+        <Paper>
+          <TableContainer>
+            <MuiTable>
+              <TableHead>
+                <TableRow>
+                  {head.map((headContext) => (
+                    <TableCell>
+                      {headContext.sortable ? (
+                        <TableSortLabel
+                          active={sortConfig?.key === headContext.key}
+                          direction={sortConfig?.key === headContext.key
+                            ? sortConfig?.direction
+                            : undefined}
+                          onClick={() => handleSort(headContext.key)}
+                        >
+                          <Typography>{headContext.header}</Typography>
+                        </TableSortLabel>
+                      ) : (
+                        headContext.header
+                      )}
+                    </TableCell>
                   ))}
                 </TableRow>
-              ))}
-          </TableBody>
-        </MuiTable>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
-        count={sortedData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        component={Grid}
-        onPageChange={handlePageChange}
-        onRowsPerPageChange={handleRowsPerPageChange}
-      />
-    </Paper>
+              </TableHead>
+              <TableBody>
+                {sortedData
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((obj) => (
+                    <TableRow className="table-row" key={obj.id} onClick={() => onRowClick(obj.id)}>
+                      {head.map((header) => (
+                        <TableCell>{renderValue(obj, header.key as keyof T)}</TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </MuiTable>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
+            count={sortedData.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            component={Grid}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleRowsPerPageChange}
+          />
+        </Paper>
+      </Grid>
+      <Grid item>
+        <Button variant="contained" color="primary" onClick={onCreateNewItem}>
+          Create New Item
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 

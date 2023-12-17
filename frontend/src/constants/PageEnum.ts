@@ -3,3 +3,8 @@ export enum PageEnum {
     Manufacturers = '/manufacturers',
     Cars = '/cars',
 }
+
+export enum ActionEnum {
+    Edit = 'edit',
+    Create = 'create',
+}

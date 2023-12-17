@@ -1,6 +1,7 @@
 :root {
   --header-height: 70px;
   --primary-red: #d0312d;
+  --primary-green: #4caf50;
 }
 
 .sidebar-header {
@@ -62,5 +63,14 @@
 
   &:hover {
     background-color: #af2f2f;
+  }
+}
+
+.save-button-container > button {
+  background-color: var(--primary-green);
+  color: white;
+
+  &:hover {
+    background-color: #388e3c;
   }
 }

@@ -10,9 +10,9 @@ VALUES
     ('Renault', 'France', '1899-02-25', 122798);
 
 -- Insert values for car table
-INSERT INTO car (model, release_date, fuel_efficiency, manufacturer_id)
+INSERT INTO car (model, description, release_date, fuel_efficiency, manufacturer_id)
 VALUES
-    ('Prius', '1997-12-10', 23.5, 1),
-    ('Model 3', '2017-07-28', 24.4, 2),
-    ('Golf', '1974-03-29', 18.9, 3),
-    ('Clio', '1990-06-01', 20.1, 4);
+    ('Prius', null, '1997-12-10', 23.5, 1),
+    ('Model 3', null, '2017-07-28', 24.4, 2),
+    ('Golf', null, '1974-03-29', 18.9, 3),
+    ('Clio', null, '1990-06-01', 20.1, 4);

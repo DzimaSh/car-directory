@@ -1,8 +1,16 @@
 package by.bsu.cardirectory.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import lombok.Data;
+import lombok.Getter;
 import lombok.ToString;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -21,6 +29,7 @@ public class Manufacturer {
             strategy = GenerationType.SEQUENCE,
             generator = "manufacturer_id_seq"
     )
+    @Getter(onMethod_ = @RestResource(exported = true))
     private Long id;
 
     @Column(unique = true)

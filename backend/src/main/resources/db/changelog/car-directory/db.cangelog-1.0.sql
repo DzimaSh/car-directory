@@ -24,7 +24,8 @@ CREATE SEQUENCE IF NOT EXISTS car_id_seq
 CREATE TABLE car
 (
     id              BIGINT PRIMARY KEY,
-    model           VARCHAR(100) NOT NULL,
+    model           VARCHAR(20) NOT NULL,
+    description     VARCHAR(100),
     release_date    TIMESTAMP WITHOUT TIME ZONE,
     fuel_efficiency REAL,
     manufacturer_id BIGINT REFERENCES manufacturer(id) NOT NULL

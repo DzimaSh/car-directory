@@ -1,10 +1,8 @@
 package by.bsu.cardirectory.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.Date;
 

@@ -1,14 +1,11 @@
 package by.bsu.cardirectory.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.ToString;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -36,5 +33,6 @@ public class Manufacturer {
     private Integer employeesNumber;
 
     @OneToMany(mappedBy = "manufacturer", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Car> cars;
 }

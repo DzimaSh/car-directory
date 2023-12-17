@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ICar } from '../../interfaces/entity';
 import Table, { HeaderContext } from '../../components/Table';
 
@@ -7,6 +8,8 @@ interface ICarTable {
 }
 
 const CarTable: React.FC<ICarTable> = ({ carsData }) => {
+  const navigate = useNavigate();
+
   const head: HeaderContext<ICar>[] = [
     {
       key: 'model',
@@ -30,14 +33,15 @@ const CarTable: React.FC<ICarTable> = ({ carsData }) => {
     },
   ];
 
+  const prepareValue = (value: number | Date | string | null): string => (value === null ? 'empty' : value.toString());
+
   const renderValue = (car: ICar, key: keyof ICar): React.ReactNode => {
-    const value: number | string | null = car[key];
+    const value: number | Date | string | null = car[key];
     switch (key) {
       case 'model':
       case 'fuelEfficiency':
-        return value;
       case 'description':
-        return value === null ? 'empty' : value;
+        return prepareValue(value);
       case 'releaseDate':
         return value === null ? 'empty' : new Date(value).toLocaleDateString();
       default:
@@ -45,11 +49,16 @@ const CarTable: React.FC<ICarTable> = ({ carsData }) => {
     }
   };
 
+  const handleRowClick = (carId: number): void => {
+    navigate(`${carId}`);
+  };
+
   return (
     <Table<ICar>
       data={carsData}
       renderValue={renderValue}
       head={head}
+      onRowClick={handleRowClick}
     />
   );
 };

@@ -17,10 +17,11 @@ import { IEntity } from '../interfaces/entity';
 export type HeaderContext<T extends IEntity> =
   { key: keyof T, header: string, sortable: boolean };
 
-export interface ITable<T extends IEntity> {
+interface ITable<T extends IEntity> {
   data: T[];
   head: HeaderContext<T>[];
   renderValue: (obj: T, key: keyof T) => React.ReactNode;
+  onRowClick: (id: number) => void;
 }
 
 interface ISortingConfig<T extends IEntity> {
@@ -32,10 +33,11 @@ const Table = <T extends IEntity, >({
   data,
   head,
   renderValue,
+  onRowClick,
 }: ITable<T>): React.ReactElement<ITable<T>> => {
   const [sortConfig, setSortConfig] = React.useState<ISortingConfig<T> | null>(null);
   const [page, setPage] = React.useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState<number>(ROWS_PER_PAGE_OPTIONS[0]);
+  const [rowsPerPage, setRowsPerPage] = React.useState<number>(ROWS_PER_PAGE_OPTIONS[1]);
 
   const sortedData = [...data].sort((a, b) => {
     if (sortConfig !== null) {
@@ -105,7 +107,7 @@ const Table = <T extends IEntity, >({
             {sortedData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((obj) => (
-                <TableRow key={obj.id}>
+                <TableRow className="table-row" key={obj.id} onClick={() => onRowClick(obj.id)}>
                   {Object.keys(obj)
                     .filter((key) => head.some((headerContext) => headerContext.key === key))
                     .map((key) => (

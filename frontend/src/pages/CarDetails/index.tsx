@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -8,82 +8,107 @@ import { Details } from '../../components';
 import { EditorContext } from '../../components/Details';
 
 const carMock = {
-  id: 1,
-  model: 'Prius',
+  id: -1,
+  model: '',
   description: null,
-  releaseDate: '1997-12-10T00:00:00.000+00:00',
-  fuelEfficiency: 23.5,
+  releaseDate: '',
+  fuelEfficiency: 0,
 };
 
 const CarDetails: React.FC = () => {
   const [car, setCar] = React.useState<ICar>(carMock);
 
-  const handleSave = (): void => {
-    setCar({ ...car });
+  const handleSave = (newCar: ICar): void => {
+    setCar({ ...newCar });
   };
 
   const context: EditorContext<ICar>[] = [
     {
       key: 'model',
       header: 'Model',
-      renderComponent: (editMode: boolean): React.ReactNode => (
+      renderComponent: (
+        editMode: boolean,
+        carCopy: ICar,
+        handleEdit: (key: keyof ICar) => void,
+        handleChange: (newCar: Partial<ICar>) => void,
+      ): React.ReactNode => (
         <TextField
           InputProps={{
             readOnly: !editMode,
           }}
-          value={car.model}
+          value={carCopy.model}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setCar({ ...car, model: e.target.value });
+            handleChange({ model: e.target.value });
           }}
+          onClick={() => handleEdit('model')}
         />
       ),
     },
     {
       key: 'description',
       header: 'Description',
-      renderComponent: (editMode: boolean): React.ReactNode => (
+      renderComponent: (
+        editMode: boolean,
+        carCopy: ICar,
+        handleEdit: (key: keyof ICar) => void,
+        handleChange: (newCar: Partial<ICar>) => void,
+      ): React.ReactNode => (
         <TextField
           InputProps={{
             readOnly: !editMode,
           }}
           multiline
-          value={car.description}
+          value={carCopy.description}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setCar({ ...car, description: e.target.value });
+            handleChange({ description: e.target.value });
           }}
+          onClick={() => handleEdit('description')}
         />
       ),
     },
     {
       key: 'releaseDate',
       header: 'Release Date',
-      renderComponent: (editMode: boolean): React.ReactNode => (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            readOnly={!editMode}
-            value={dayjs(car.releaseDate)}
-            onChange={(e: Dayjs | null): void => {
-              if (e !== null) {
-                setCar({ ...car, description: e.locale() });
-              }
-            }}
-          />
-        </LocalizationProvider>
+      renderComponent: (
+        editMode: boolean,
+        carCopy: ICar,
+        handleEdit: (key: keyof ICar) => void,
+        handleChange: (newCar: Partial<ICar>) => void,
+      ): React.ReactNode => (
+        <Box onClick={() => handleEdit('releaseDate')}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              readOnly={!editMode}
+              value={dayjs(carCopy.releaseDate)}
+              onChange={(e: Dayjs | null): void => {
+                if (e !== null) {
+                  handleChange({ releaseDate: e.locale() });
+                }
+              }}
+            />
+          </LocalizationProvider>
+        </Box>
       ),
     },
     {
       key: 'fuelEfficiency',
       header: 'Fuel Efficiency',
-      renderComponent: (editMode: boolean): React.ReactNode => (
+      renderComponent: (
+        editMode: boolean,
+        carCopy: ICar,
+        handleEdit: (key: keyof ICar) => void,
+        handleChange: (newCar: Partial<ICar>) => void,
+      ): React.ReactNode => (
         <TextField
           InputProps={{
             readOnly: !editMode,
           }}
           type="number"
-          value={car.fuelEfficiency}
+          value={carCopy.fuelEfficiency}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setCar({ ...car, fuelEfficiency: parseFloat(e?.target.value ?? '0') });
+            handleChange({ fuelEfficiency: parseFloat(e?.target.value ?? '0') });
           }}
+          onClick={() => handleEdit('fuelEfficiency')}
         />
       ),
     },

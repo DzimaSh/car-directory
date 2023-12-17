@@ -12,6 +12,9 @@ export type EditorContext<T extends IEntity> =
     header: string,
     renderComponent: (
       editMode: boolean,
+      objCopy: T,
+      handleEdit: (key: keyof T) => void,
+      handleChange: (newObject: Partial<T>) => void,
     ) => React.ReactNode
   };
 
@@ -28,26 +31,38 @@ const Details = <T extends IEntity, >({
   onSave,
   context,
 }: IDetails<T>): React.ReactElement<IDetails<T>> => {
-  const [isEditing, setIsEditing] = useState<keyof T | null>(null);
+  const [editingKey, setEditingKey] = useState<keyof T | null>(null);
+  const [objCopy, setObjCopy] = React.useState<T>(object);
+
+  React.useEffect(() => {
+    setObjCopy(object);
+  }, [object]);
 
   const handleEdit = (key: keyof T): void => {
-    setIsEditing(key);
+    setEditingKey(key);
   };
 
   const handleSave = (): void => {
-    onSave(object);
-    setIsEditing(null);
+    onSave(objCopy);
+    setEditingKey(null);
   };
 
   const handleCancel = (): void => {
-    setIsEditing(null);
+    setEditingKey(null);
+    setObjCopy(object);
+  };
+
+  const handleChange = (newObject: Partial<T>): void => {
+    if (editingKey !== null) {
+      setObjCopy({ ...objCopy, ...newObject });
+    }
   };
 
   return (
     <Container className="car-details">
       <Typography variant="h3" sx={{ mb: 2 }}>{header}</Typography>
       {context.map((fieldContext) => {
-        const editMode = isEditing === fieldContext.key as string;
+        const editMode = editingKey === fieldContext.key as string;
 
         return (
           <Box key={fieldContext.key as string} className="detail">
@@ -56,7 +71,13 @@ const Details = <T extends IEntity, >({
               :
               {' '}
             </strong>
-            {fieldContext.renderComponent(editMode)}
+            {fieldContext.renderComponent(
+              editMode,
+              objCopy,
+              handleEdit,
+              handleChange,
+            )}
+
             {editMode ? (
               <>
                 <Button variant="contained" color="primary" onClick={handleSave} className="button">

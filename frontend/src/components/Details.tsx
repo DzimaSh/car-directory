@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import {
-  Button, Container, IconButton, Box, Typography,
+  Button, Container, IconButton, Box, Typography, Grid,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { Cancel } from '@mui/icons-material';
 import { IEntity } from '../interfaces/entity';
 import { Loader } from './index';
+import DeleteButton from './common/DeleteButton';
 
 export type EditorContext<T extends IEntity> =
   {
@@ -24,6 +25,7 @@ interface IDetails<T extends IEntity> {
   header: string;
   object: T;
   onSave: (obj: T) => void;
+  onDelete: (objId: number) => void;
   context: EditorContext<T>[];
   isLoading: boolean;
 }
@@ -32,6 +34,7 @@ const Details = <T extends IEntity, >({
   header,
   object,
   onSave,
+  onDelete,
   context,
   isLoading,
 }: IDetails<T>): React.ReactElement<IDetails<T>> => {
@@ -64,7 +67,12 @@ const Details = <T extends IEntity, >({
 
   return (
     <Container className="details">
-      <Typography variant="h3" sx={{ mb: 2 }}>{header}</Typography>
+      <Typography
+        variant="h3"
+        sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}
+      >
+        {header}
+      </Typography>
       {isLoading ? <Loader /> : context.map((fieldContext) => {
         const editMode = editingKey === fieldContext.key as string;
 
@@ -103,6 +111,11 @@ const Details = <T extends IEntity, >({
           </Box>
         );
       })}
+      <Grid className="delete-button-container" container justifyContent="flex-end">
+        <DeleteButton onDelete={() => onDelete(object.id)}>
+          Delete
+        </DeleteButton>
+      </Grid>
     </Container>
   );
 };

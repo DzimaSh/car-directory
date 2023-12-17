@@ -1,6 +1,6 @@
 :root {
   --header-height: 70px;
-  --primary-red: '#d0312d';
+  --primary-red: #d0312d;
 }
 
 .sidebar-header {
@@ -54,4 +54,13 @@
   justify-content: center;
   flex-grow: 1;
   align-items: center;
+}
+
+.delete-button-container > button {
+  background-color: var(--primary-red);
+  color: white;
+
+  &:hover {
+    background-color: #af2f2f;
+  }
 }

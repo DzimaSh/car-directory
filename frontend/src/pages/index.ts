@@ -1,8 +1,13 @@
 import Home from './Home/Home';
-import Cars from './Cars/index';
+import Manufacturers from './Manufaturers';
+import Cars from './Cars';
 import CarDetails from './Cars/CarDetails';
 import CarCreate from './Cars/CarCreate';
 
 export {
-  Home, Cars, CarDetails, CarCreate,
+  Home,
+  Manufacturers,
+  Cars,
+  CarDetails,
+  CarCreate,
 };

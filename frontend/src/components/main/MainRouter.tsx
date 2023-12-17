@@ -2,12 +2,17 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ActionEnum, PageEnum } from '../../constants/PageEnum';
 import {
-  CarCreate, CarDetails, Cars, Home,
+  CarCreate,
+  CarDetails,
+  Cars,
+  Home,
+  Manufacturers,
 } from '../../pages';
 
 const MainRouter: React.FC = () => (
   <Routes>
     <Route path={PageEnum.Home} element={<Home />} />
+    <Route path={PageEnum.Manufacturers} element={<Manufacturers />} />
     <Route path={PageEnum.Cars} element={<Cars />} />
     <Route
       path={`${PageEnum.Cars}/${ActionEnum.Edit}/:id`}

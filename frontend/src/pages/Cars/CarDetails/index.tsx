@@ -204,7 +204,7 @@ const CarDetails: React.FC = () => {
   return (
     <>
       {typeof car === 'undefined'
-        ? <Loader bigger /> : (
+        ? <Loader standalone bigger /> : (
           <Details<ICar>
             header="Car"
             object={car}

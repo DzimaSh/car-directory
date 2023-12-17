@@ -14,7 +14,7 @@ const Cars: React.FC = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h4" gutterBottom>
-        Car Directory
+        Cars Directory
       </Typography>
       <Typography variant="body1" gutterBottom>
         Welcome to the Car Directory!

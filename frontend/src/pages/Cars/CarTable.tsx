@@ -1,10 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Chip } from '@mui/material';
 import Table from '../../components/Table';
 import { ICar, ICarValues } from '../../interfaces/car';
 import { IManufacturer } from '../../interfaces/manufacturer';
-import { ActionEnum } from '../../constants/PageEnum';
+import { ActionEnum, PageEnum } from '../../constants/PageEnum';
 import { HeaderContext } from '../../interfaces/components';
+import { prepareValue } from '../../utils/helpers';
 
 interface ICarTable {
   carsData: ICar[];
@@ -41,10 +43,12 @@ const CarTable: React.FC<ICarTable> = ({ carsData }) => {
     },
   ];
 
-  const prepareValue = (value: number | string | null): string => (value === null
-    ? 'empty'
-    : value.toString()
-  );
+  const handleManufacturerClick = (event: React.MouseEvent, manufacturerId: number): void => {
+    event.stopPropagation();
+    navigate(
+      `${PageEnum.Manufacturers}/${ActionEnum.Edit}/${manufacturerId}`,
+    );
+  };
 
   const renderValue = (car: ICar, key: keyof ICar): React.ReactNode => {
     const value: ICarValues = car[key];
@@ -52,7 +56,14 @@ const CarTable: React.FC<ICarTable> = ({ carsData }) => {
       case 'releaseDate':
         return prepareValue(new Date(value as string).toLocaleDateString());
       case 'manufacturer':
-        return prepareValue(value ? (value as IManufacturer).name : null);
+        return (
+          <Chip
+            label={(value as IManufacturer).name}
+            onClick={(e: React.MouseEvent) => handleManufacturerClick(
+              e, (value as IManufacturer).id,
+            )}
+          />
+        );
       default:
         return prepareValue(value as string | number);
     }

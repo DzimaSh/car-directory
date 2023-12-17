@@ -7,3 +7,8 @@ export function findById<T extends IEntity>(array: T[], id: number): T | null {
 export function findByName<T extends INamedEntity >(array: T[], name: string): T | undefined {
   return array.find((obj) => obj.name === name);
 }
+
+export const prepareValue = (value: number | string | null): string => (value === null
+  ? 'empty'
+  : value.toString()
+);

@@ -16,6 +16,7 @@ export type EditorContext<T extends IEntity> =
       handleEdit: (key: keyof T) => void,
       handleChange: (newObject: Partial<T>) => void,
     ) => React.ReactNode
+    notEditable?: boolean,
   };
 
 interface IDetails<T extends IEntity> {
@@ -78,19 +79,23 @@ const Details = <T extends IEntity, >({
               handleChange,
             )}
 
-            {editMode ? (
+            {!fieldContext?.notEditable && (
               <>
-                <Button variant="contained" color="primary" onClick={handleSave} className="button">
-                  Save
-                </Button>
-                <IconButton onClick={handleCancel}>
-                  <Cancel />
-                </IconButton>
+                {editMode ? (
+                  <>
+                    <Button variant="contained" color="primary" onClick={handleSave} className="button">
+                      Save
+                    </Button>
+                    <IconButton onClick={handleCancel}>
+                      <Cancel />
+                    </IconButton>
+                  </>
+                ) : (
+                  <IconButton onClick={() => handleEdit(fieldContext.key as keyof T)}>
+                    <EditIcon />
+                  </IconButton>
+                )}
               </>
-            ) : (
-              <IconButton onClick={() => handleEdit(fieldContext.key as keyof T)}>
-                <EditIcon />
-              </IconButton>
             )}
           </Box>
         );

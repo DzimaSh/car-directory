@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import CarTable from './CarTable';
-import { ICar } from '../../interfaces/entity';
+import { ICar } from '../../interfaces/car';
 
 const carsData: ICar[] = [
   {

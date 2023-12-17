@@ -14,8 +14,12 @@ import {
 import { ROWS_PER_PAGE_OPTIONS } from '../constants/settings';
 import { IEntity } from '../interfaces/entity';
 
-export type HeaderContext<T extends IEntity> =
-  { key: keyof T, header: string, sortable: boolean };
+export type HeaderContext<T extends IEntity> = {
+  key: keyof T,
+  header: string,
+  sortable: boolean
+  customSort?: (a: T, b: T) => number;
+};
 
 interface ITable<T extends IEntity> {
   data: T[];
@@ -95,9 +99,7 @@ const Table = <T extends IEntity, >({
                       <Typography>{headContext.header}</Typography>
                     </TableSortLabel>
                   ) : (
-                    <TableCell>
-                      {headContext.header}
-                    </TableCell>
+                    headContext.header
                   )}
                 </TableCell>
               ))}
@@ -108,11 +110,9 @@ const Table = <T extends IEntity, >({
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((obj) => (
                 <TableRow className="table-row" key={obj.id} onClick={() => onRowClick(obj.id)}>
-                  {Object.keys(obj)
-                    .filter((key) => head.some((headerContext) => headerContext.key === key))
-                    .map((key) => (
-                      <TableCell>{renderValue(obj, key as keyof T)}</TableCell>
-                    ))}
+                  {head.map((header) => (
+                    <TableCell>{renderValue(obj, header.key as keyof T)}</TableCell>
+                  ))}
                 </TableRow>
               ))}
           </TableBody>

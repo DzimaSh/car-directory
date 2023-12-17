@@ -3,11 +3,11 @@ import { Box, TextField } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { ICar } from '../../interfaces/entity';
+import { ICar } from '../../interfaces/car';
 import { Details } from '../../components';
 import { EditorContext } from '../../components/Details';
 
-const carMock = {
+const carMock: ICar = {
   id: -1,
   model: '',
   description: null,
@@ -111,6 +111,17 @@ const CarDetails: React.FC = () => {
           onClick={() => handleEdit('fuelEfficiency')}
         />
       ),
+    },
+    {
+      key: 'manufacturer',
+      header: 'Manufacturer',
+      renderComponent: (_, carCopy: ICar): React.ReactNode => (
+        <TextField
+          disabled
+          value={carCopy.manufacturer?.name}
+        />
+      ),
+      notEditable: true,
     },
   ];
 

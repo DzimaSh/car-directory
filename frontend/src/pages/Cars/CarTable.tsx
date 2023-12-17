@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ICar } from '../../interfaces/entity';
 import Table, { HeaderContext } from '../../components/Table';
+import { ICar, ICarValues } from '../../interfaces/car';
 
 interface ICarTable {
   carsData: ICar[];
@@ -31,21 +31,28 @@ const CarTable: React.FC<ICarTable> = ({ carsData }) => {
       sortable: true,
       header: 'Fuel Efficiency',
     },
+    {
+      key: 'manufacturer',
+      sortable: false,
+      header: 'Manufacturer',
+    },
   ];
 
-  const prepareValue = (value: number | Date | string | null): string => (value === null ? 'empty' : value.toString());
+  const prepareValue = (value: number | string | null): string => (value === null
+    ? 'empty'
+    : value.toString()
+  );
 
   const renderValue = (car: ICar, key: keyof ICar): React.ReactNode => {
-    const value: number | Date | string | null = car[key];
-    switch (key) {
-      case 'model':
-      case 'fuelEfficiency':
-      case 'description':
-        return prepareValue(value);
-      case 'releaseDate':
-        return value === null ? 'empty' : new Date(value).toLocaleDateString();
+    const value: ICarValues = car[key];
+    switch (typeof value) {
+      case 'number':
+      case 'string':
+        return prepareValue(value ?? null);
+      case 'object':
+        return prepareValue(value?.name ?? null);
       default:
-        return '';
+        return prepareValue(null);
     }
   };
 

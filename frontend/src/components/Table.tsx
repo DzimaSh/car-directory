@@ -64,7 +64,7 @@ const Table = <T extends IEntity, >({
   };
 
   return (
-    <Grid container direction="column" spacing={2}>
+    <Grid container direction="column" flexWrap="nowrap" spacing={2}>
       <Grid item>
         <Paper>
           <TableContainer>

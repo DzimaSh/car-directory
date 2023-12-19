@@ -39,10 +39,7 @@ const Details = <T extends IEntity, >({
   };
 
   const handleChange = (newObject: Partial<T>): void => {
-    console.log(editingKey);
-    if (editingKey !== null) {
-      setObjCopy({ ...objCopy, ...newObject });
-    }
+    setObjCopy({ ...objCopy, ...newObject });
   };
 
   return (

@@ -19,6 +19,7 @@ import Api from '../../../api';
 import { getApiCarLink, getApiManufacturerLink } from '../../../utils/links';
 import { PageEnum } from '../../../constants/PageEnum';
 import { projections } from '../../../api/projections';
+import { findIntersection } from '../../../utils/helpers';
 
 const ManufacturerDetails: React.FC = () => {
   const routeParams = useParams<{ id: string }>();
@@ -30,9 +31,11 @@ const ManufacturerDetails: React.FC = () => {
 
   const { isFetched: isCarsFetched } = useQuery(
     ['cars'],
-    () => Api.Car.getFreeCars(manufacturer?.id as number, { projection: projections.car.summary }),
+    () => Api.Car.getFreeCars(
+      parseInt(routeParams.id as string, 10),
+      { projection: projections.car.summary },
+    ),
     {
-      enabled: !!manufacturer,
       onSuccess: ({ data }) => {
         setAvailableCars(get(data, '_embedded.cars', []));
       },
@@ -53,7 +56,7 @@ const ManufacturerDetails: React.FC = () => {
 
   React.useEffect(() => {
     setIsLoading(!(isManufacturerFetched && isCarsFetched));
-  }, [availableCars, isManufacturerFetched, isCarsFetched]);
+  }, [manufacturer, availableCars, isManufacturerFetched, isCarsFetched]);
 
   const handleUpdateCar = (carId: number, newCar: ICar): Promise<AxiosResponse<ICar>> => {
     const manufacturer = newCar.manufacturer?.id
@@ -72,8 +75,8 @@ const ManufacturerDetails: React.FC = () => {
     if (typeof manufacturer !== 'undefined') {
       availableCars
         .forEach((availableCar) => {
-          const isManufactured = newManufacturer.cars
-            ?.map((car) => car.id)
+          const isManufactured = (newManufacturer.cars ?? [])
+            .map((car) => car.id)
             .includes(availableCar.id);
 
           const updatedCar: ICar = {
@@ -219,7 +222,7 @@ const ManufacturerDetails: React.FC = () => {
             handleChange({ cars: value });
           }}
           loading={isLoading}
-          defaultValue={manufacturer?.cars}
+          defaultValue={findIntersection<ICar>(availableCars, manufacturer?.cars ?? [])}
           renderInput={(params) => (
             <TextField
               {...params}

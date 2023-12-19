@@ -10,12 +10,13 @@ import { get } from 'lodash';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ICar } from '../../../interfaces/car';
 import { Details, Loader } from '../../../components';
-import Api, { projections } from '../../../api';
+import Api from '../../../api';
 import { IManufacturer } from '../../../interfaces/manufacturer';
 import { findByName } from '../../../utils/helpers';
 import { getApiManufacturerLink } from '../../../utils/links';
 import { PageEnum } from '../../../constants/PageEnum';
 import { EditorContext } from '../../../interfaces/components';
+import { projections } from '../../../api/projections';
 
 const CarDetails: React.FC = () => {
   const routeParams = useParams<{ id: string }>();

@@ -56,6 +56,9 @@ const CarTable: React.FC<ICarTable> = ({ carsData }) => {
       case 'releaseDate':
         return prepareValue(new Date(value as string).toLocaleDateString());
       case 'manufacturer':
+        if (typeof value === 'undefined' || value === null) {
+          return prepareValue(null);
+        }
         return (
           <Chip
             label={(value as IManufacturer).name}

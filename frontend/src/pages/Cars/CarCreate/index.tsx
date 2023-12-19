@@ -8,7 +8,7 @@ import {
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
-import Api, { projections } from '../../../api';
+import Api from '../../../api';
 import { IManufacturer } from '../../../interfaces/manufacturer';
 import Create from '../../../components/Create';
 import { ICar } from '../../../interfaces/car';
@@ -16,6 +16,7 @@ import { getApiManufacturerLink } from '../../../utils/links';
 import { ActionEnum, PageEnum } from '../../../constants/PageEnum';
 import { CreationContext } from '../../../interfaces/components';
 import { findByName } from '../../../utils/helpers';
+import { projections } from '../../../api/projections';
 
 const initialCar: ICar = {
   id: -1,
@@ -23,7 +24,7 @@ const initialCar: ICar = {
   description: null,
   fuelEfficiency: 0.0,
   releaseDate: '',
-  manufacturer: undefined,
+  manufacturer: null,
 };
 
 const CarCreate: React.FC = () => {
@@ -31,6 +32,10 @@ const CarCreate: React.FC = () => {
 
   const [manufacturers, setManufacturers] = React.useState<IManufacturer[]>([]);
   const [car] = React.useState<ICar>(initialCar);
+
+  const saveDisabled = (carToCheck: ICar): boolean => carToCheck.model.length === 0
+    || carToCheck.fuelEfficiency <= 0
+    || typeof carToCheck.manufacturer === 'undefined';
 
   const { isFetched: isManufacturersFetched } = useQuery(
     ['manufacturers'],
@@ -45,7 +50,9 @@ const CarCreate: React.FC = () => {
   const handleSave = (newCar: ICar): void => {
     Api.Car.createCar({
       ...newCar,
-      manufacturer: getApiManufacturerLink(newCar.manufacturer?.id as number),
+      manufacturer: typeof newCar.manufacturer?.id !== 'undefined'
+        ? getApiManufacturerLink(newCar.manufacturer.id)
+        : null,
     }).then(({ data }) => {
       navigate(`${PageEnum.Cars}/${ActionEnum.Edit}/${data.id}`, { replace: true });
     });
@@ -62,6 +69,7 @@ const CarCreate: React.FC = () => {
         <TextField
           className="edit-component"
           value={carCopy.model}
+          error={carCopy.model.length === 0}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             handleChange({ model: e.target.value });
           }}
@@ -117,6 +125,7 @@ const CarCreate: React.FC = () => {
           className="edit-component"
           type="number"
           value={carCopy.fuelEfficiency}
+          error={carCopy.fuelEfficiency <= 0}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             handleChange({ fuelEfficiency: parseFloat(e?.target.value ?? '0') });
           }}
@@ -141,12 +150,16 @@ const CarCreate: React.FC = () => {
             label="Manufacturer"
             error={typeof carCopy.manufacturer === 'undefined'}
             value={carCopy.manufacturer?.name}
+            defaultValue=""
           >
             {manufacturers.map((manufacturer) => (
               <MenuItem key={manufacturer.id} value={manufacturer.name}>
                 {manufacturer.name}
               </MenuItem>
             ))}
+            <MenuItem key="manufacturer_null" value="">
+              <em>None</em>
+            </MenuItem>
           </Select>
         </FormControl>
       ),
@@ -160,6 +173,7 @@ const CarCreate: React.FC = () => {
       onSave={handleSave}
       context={context}
       isLoading={!isManufacturersFetched}
+      disabled={saveDisabled}
     />
   );
 };

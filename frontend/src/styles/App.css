@@ -2,6 +2,7 @@
   --header-height: 70px;
   --primary-red: #d0312d;
   --primary-green: #4caf50;
+  --primary-blue: #1976d2;
 }
 
 .sidebar-header {
@@ -24,7 +25,7 @@
 }
 
 .details {
-  max-width: 600px;
+  max-width: 700px;
   margin-top: 10px;
   padding: 20px;
   border-radius: 4px;
@@ -79,5 +80,14 @@
 
   &:hover {
     background-color: #388e3c;
+  }
+}
+
+.update-button-container > button {
+  background-color: var(--primary-blue);
+  color: white;
+
+  &:hover {
+    background-color: #1976bf;
   }
 }

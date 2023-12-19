@@ -6,6 +6,7 @@ import {
   CarDetails,
   Cars,
   Home,
+  ManufacturerDetails,
   Manufacturers,
 } from '../../pages';
 
@@ -13,6 +14,10 @@ const MainRouter: React.FC = () => (
   <Routes>
     <Route path={PageEnum.Home} element={<Home />} />
     <Route path={PageEnum.Manufacturers} element={<Manufacturers />} />
+    <Route
+      path={`${PageEnum.Manufacturers}/${ActionEnum.Edit}/:id`}
+      element={<ManufacturerDetails />}
+    />
     <Route path={PageEnum.Cars} element={<Cars />} />
     <Route
       path={`${PageEnum.Cars}/${ActionEnum.Edit}/:id`}

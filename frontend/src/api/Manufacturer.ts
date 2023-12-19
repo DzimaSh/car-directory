@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import request from '../utils/request';
-import { IManufacturer } from '../interfaces/manufacturer';
-import { projections } from './index';
+import { IManufacturer, IManufacturerPayload } from '../interfaces/manufacturer';
+import { projections } from './projections';
 
 interface IManufacturerRequest {
   projection?: string;
@@ -13,11 +13,20 @@ const Manufacturer = {
   }: IManufacturerRequest): Promise<AxiosResponse<IManufacturer[]>> => request.get('manufacturers', {
     params: { projection },
   }),
-  // getCarById: (id: number): Promise<AxiosResponse<ICar>> => request.get(`cars/${id}`),
+  getById: (
+    id: number,
+    params: IManufacturerRequest,
+  ): Promise<AxiosResponse<IManufacturer>> => request.get(`manufacturers/${id}`, {
+    params,
+  }),
+  updateManufacturer: (
+    id: number,
+    manufacturer: IManufacturerPayload,
+  ): Promise<AxiosResponse<IManufacturer>> => request.patch(`manufacturers/${id}`, manufacturer, {
+    params: { projection: projections.manufacturer.enriched },
+  }),
+  deleteManufacturer: (id: number): Promise<AxiosResponse<void>> => request.delete(`manufacturers/${id}`),
   // createCar: (car: ICarPayload): Promise<AxiosResponse<ICar>> => request.post('cars', car),
-  // updateCar: (id: number, car: ICarPayload): Promise<AxiosResponse<ICar>> =>
-  // request.put(`/cars/${id}`, car),
-  // deleteCar: (id: number): Promise<AxiosResponse<void>> => request.delete(`/cars/${id}`),
 };
 
 export default Manufacturer;

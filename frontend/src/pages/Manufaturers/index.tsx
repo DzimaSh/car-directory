@@ -2,8 +2,9 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useQuery } from 'react-query';
 import { get } from 'lodash';
-import Api, { projections } from '../../api';
+import Api from '../../api';
 import ManufacturerTable from './ManufaturerTable';
+import { projections } from '../../api/projections';
 
 const Manufacturers: React.FC = () => {
   const { data: manufacturersData } = useQuery(

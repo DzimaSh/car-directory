@@ -56,6 +56,9 @@ const ManufacturerTable: React.FC<IManufacturerTable> = ({ manufacturersData }) 
       case 'foundationDate':
         return prepareValue(new Date(value as string).toLocaleDateString());
       case 'cars':
+        if (typeof value === 'undefined' || (value as ICar[]).length === 0) {
+          return prepareValue(null);
+        }
         return (
           <Stack direction="row" spacing={1}>
             {(value as ICar[]).map((car) => (

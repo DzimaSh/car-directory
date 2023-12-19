@@ -6,7 +6,7 @@ export interface ICar extends IEntity {
   description: string | null;
   releaseDate: string;
   fuelEfficiency: number;
-  manufacturer?: IManufacturer;
+  manufacturer?: IManufacturer | null;
 }
 
 export type ICarValues = ICar[keyof ICar];
@@ -16,5 +16,5 @@ export interface ICarPayload {
   description: string | null;
   releaseDate: string;
   fuelEfficiency: number;
-  manufacturer?: string;
+  manufacturer?: string | null;
 }

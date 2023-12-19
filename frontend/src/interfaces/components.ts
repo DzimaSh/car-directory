@@ -48,6 +48,7 @@ export interface IAction<T extends IEntity> {
   header: string;
   object: T;
   isLoading: boolean;
+  disabled?: (obj: T) => boolean;
 }
 
 export interface IDetails<T extends IEntity> extends IAction<T> {

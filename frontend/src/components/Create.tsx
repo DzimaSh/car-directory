@@ -12,6 +12,7 @@ const Create = <T extends IEntity, >({
   onSave,
   context,
   isLoading,
+  disabled,
 }: ICreate<T>): React.ReactElement<ICreate<T>> => {
   const [objCopy, setObjCopy] = React.useState<T>(object);
 
@@ -49,7 +50,11 @@ const Create = <T extends IEntity, >({
         </Box>
       ))}
       <Grid className="save-button-container" container justifyContent="flex-end">
-        <Button variant="contained" onClick={handleSave}>
+        <Button
+          variant="contained"
+          onClick={handleSave}
+          disabled={disabled && disabled(objCopy)}
+        >
           Save
         </Button>
       </Grid>

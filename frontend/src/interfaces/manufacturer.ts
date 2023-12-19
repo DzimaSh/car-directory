@@ -16,5 +16,5 @@ export interface IManufacturerPayload {
   country: string;
   foundationDate: string;
   employeesNumber: number;
-  cars: string[];
+  cars?: string[];
 }

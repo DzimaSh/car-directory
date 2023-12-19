@@ -39,6 +39,7 @@ const Details = <T extends IEntity, >({
   };
 
   const handleChange = (newObject: Partial<T>): void => {
+    console.log(editingKey);
     if (editingKey !== null) {
       setObjCopy({ ...objCopy, ...newObject });
     }
@@ -73,9 +74,11 @@ const Details = <T extends IEntity, >({
               <>
                 {editMode ? (
                   <>
-                    <Button variant="contained" color="primary" onClick={handleUpdate} className="button">
-                      Save
-                    </Button>
+                    <Grid className="update-button-container">
+                      <Button variant="contained" color="primary" onClick={handleUpdate} className="button">
+                        Update
+                      </Button>
+                    </Grid>
                     <IconButton onClick={handleCancel}>
                       <Cancel />
                     </IconButton>
@@ -90,10 +93,20 @@ const Details = <T extends IEntity, >({
           </Box>
         );
       })}
-      <Grid className="delete-button-container" container justifyContent="flex-end">
-        <DeleteButton onDelete={() => onDelete(object.id)}>
-          Delete
-        </DeleteButton>
+      <Grid container justifyContent="flex-end">
+        <Grid className="update-button-container" mr={2}>
+          <Button
+            variant="contained"
+            onClick={handleUpdate}
+          >
+            Update
+          </Button>
+        </Grid>
+        <Grid className="delete-button-container">
+          <DeleteButton onDelete={() => onDelete(object.id)}>
+            Delete
+          </DeleteButton>
+        </Grid>
       </Grid>
     </Container>
   );

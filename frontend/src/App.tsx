@@ -1,28 +1,34 @@
 import React from 'react';
-import logo from './icons/logo.svg';
-import './App.css';
+import { BrowserRouter } from 'react-router-dom';
+import './styles/App.css';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { Box } from '@mui/material';
+import { Footer, Header, MainRouter } from './components';
+import SideBar from './components/main/SideBar';
 
-const App: React.FC = () => (
-  <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <p>
-        Edit
-        {' '}
-        <code>src/App.tsx</code>
-        {' '}
-        and save to reload.
-      </p>
-      <a
-        className="App-link"
-        href="https://reactjs.org"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Learn React
-      </a>
-    </header>
-  </div>
-);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+const App: React.FC = () => {
+  const [sideBarOpen, setSideBarOpen] = React.useState<boolean>(false);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Header onSideBarOpen={() => setSideBarOpen(true)} />
+        <SideBar open={sideBarOpen} onClose={() => setSideBarOpen(false)} />
+        <Box className="main">
+          <MainRouter />
+        </Box>
+        <Footer />
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+};
 
 export default React.memo(App);

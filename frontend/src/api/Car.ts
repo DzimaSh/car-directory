@@ -7,6 +7,7 @@ interface ICarRequest {
   projection?: string;
   page?: number;
   size?: number;
+  manufacturerId?: number | null;
 }
 
 const defaultPageable = {
@@ -29,9 +30,8 @@ const Car = {
     params,
   }),
   getFreeCars: (
-    manufacturerId: number,
     params?: ICarRequest,
-  ): Promise<AxiosResponse<ICar[]>> => request.get(`cars/search/free/forManufacturer/${manufacturerId}`, {
+  ): Promise<AxiosResponse<ICar[]>> => request.get('cars/search/free', {
     params: {
       ...params,
       ...defaultPageable,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Autocomplete,
   Box,
@@ -13,28 +13,41 @@ import { get } from 'lodash';
 import { AxiosResponse } from 'axios';
 import { ICar } from '../../../interfaces/car';
 import { IManufacturer } from '../../../interfaces/manufacturer';
-import { Details, Loader } from '../../../components';
-import { EditorContext } from '../../../interfaces/components';
+import { CreationContext } from '../../../interfaces/components';
 import Api from '../../../api';
 import { getApiCarLink, getApiManufacturerLink } from '../../../utils/links';
-import { PageEnum } from '../../../constants/PageEnum';
+import { ActionEnum, PageEnum } from '../../../constants/PageEnum';
 import { projections } from '../../../api/projections';
 import { findIntersection } from '../../../utils/helpers';
+import Create from '../../../components/Create';
 
-const ManufacturerDetails: React.FC = () => {
-  const routeParams = useParams<{ id: string }>();
+const initialCar: IManufacturer = {
+  id: -1,
+  name: '',
+  country: '',
+  employeesNumber: 0,
+  foundationDate: '',
+  cars: [],
+};
+
+const ManufacturerCreate: React.FC = () => {
   const navigate = useNavigate();
 
-  const [manufacturer, setManufacturer] = React.useState<IManufacturer>();
+  const [manufacturer] = React.useState<IManufacturer>(initialCar);
   const [availableCars, setAvailableCars] = React.useState<ICar[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
+
+  const saveDisabled = (
+    manufacturerToCheck: IManufacturer,
+  ): boolean => manufacturerToCheck.name.length === 0
+    || manufacturerToCheck.employeesNumber <= 0;
 
   const { isFetched: isCarsFetched } = useQuery(
     ['cars'],
     () => Api.Car.getFreeCars(
       {
         projection: projections.car.summary,
-        manufacturerId: parseInt(routeParams.id as string, 10),
+        manufacturerId: null,
       },
     ),
     {
@@ -44,23 +57,11 @@ const ManufacturerDetails: React.FC = () => {
     },
   );
 
-  const { isFetched: isManufacturerFetched } = useQuery(
-    [routeParams.id, 'manufacturer'],
-    () => Api.Manufacturer.getById(parseInt(routeParams.id as string, 10), {
-      projection: projections.manufacturer.enriched,
-    }),
-    {
-      onSuccess: ({ data }) => {
-        setManufacturer(data);
-      },
-    },
-  );
-
   React.useEffect(() => {
-    setIsLoading(!(isManufacturerFetched && isCarsFetched));
-  }, [manufacturer, availableCars, isManufacturerFetched, isCarsFetched]);
+    setIsLoading(!(isCarsFetched));
+  }, [manufacturer, availableCars, isCarsFetched]);
 
-  const handleUpdateCar = (carId: number, newCar: ICar): Promise<AxiosResponse<ICar>> => {
+  const handleSaveCar = (carId: number, newCar: ICar): Promise<AxiosResponse<ICar>> => {
     const manufacturer = newCar.manufacturer?.id
       ? getApiManufacturerLink(newCar.manufacturer?.id)
       : null;
@@ -73,7 +74,7 @@ const ManufacturerDetails: React.FC = () => {
     );
   };
 
-  const handleUpdate = (newManufacturer: IManufacturer): void => {
+  const handleSave = (newManufacturer: IManufacturer): void => {
     if (typeof manufacturer !== 'undefined') {
       availableCars
         .forEach((availableCar) => {
@@ -86,11 +87,10 @@ const ManufacturerDetails: React.FC = () => {
             manufacturer: isManufactured ? newManufacturer : null,
           };
 
-          handleUpdateCar(availableCar.id, updatedCar);
+          handleSaveCar(availableCar.id, updatedCar);
         });
 
-      Api.Manufacturer.updateManufacturer(
-        manufacturer.id,
+      Api.Manufacturer.createManufacturer(
         {
           ...newManufacturer,
           cars: newManufacturer.cars
@@ -98,39 +98,26 @@ const ManufacturerDetails: React.FC = () => {
         },
       )
         .then(({ data }) => {
-          setManufacturer({ ...data });
+          navigate(`${PageEnum.Manufacturers}/${ActionEnum.Edit}/${data.id}`, { replace: true });
         });
     }
   };
 
-  const handleDelete = (id: number): void => {
-    if (typeof manufacturer !== 'undefined') {
-      Api.Manufacturer.deleteManufacturer(id).then(() => {
-        navigate(PageEnum.Manufacturers);
-      });
-    }
-  };
-
-  const context: EditorContext<IManufacturer>[] = [
+  const context: CreationContext<IManufacturer>[] = [
     {
       key: 'name',
       header: 'Name',
       renderComponent: (
-        editMode: boolean,
         manufacturerCopy: IManufacturer,
-        handleEdit: (key: keyof IManufacturer) => void,
         handleChange: (newManufacturer: Partial<IManufacturer>) => void,
       ): React.ReactNode => (
         <TextField
           className="edit-component"
-          InputProps={{
-            readOnly: !editMode,
-          }}
           value={manufacturerCopy.name}
+          error={manufacturerCopy.name.length < 1}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             handleChange({ name: e.target.value });
           }}
-          onClick={() => handleEdit('name')}
         />
       ),
     },
@@ -138,22 +125,16 @@ const ManufacturerDetails: React.FC = () => {
       key: 'country',
       header: 'Origin Country',
       renderComponent: (
-        editMode: boolean,
         manufacturerCopy: IManufacturer,
-        handleEdit: (key: keyof IManufacturer) => void,
         handleChange: (newManufacturer: Partial<IManufacturer>) => void,
       ): React.ReactNode => (
         <TextField
           className="edit-component"
-          InputProps={{
-            readOnly: !editMode,
-          }}
           multiline
           value={manufacturerCopy.country}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             handleChange({ country: e.target.value });
           }}
-          onClick={() => handleEdit('country')}
         />
       ),
     },
@@ -161,15 +142,12 @@ const ManufacturerDetails: React.FC = () => {
       key: 'foundationDate',
       header: 'Foundation Date',
       renderComponent: (
-        editMode: boolean,
         manufacturerCopy: IManufacturer,
-        handleEdit: (key: keyof IManufacturer) => void,
         handleChange: (newManufacturer: Partial<IManufacturer>) => void,
       ): React.ReactNode => (
-        <Box className="edit-component" onClick={() => handleEdit('foundationDate')}>
+        <Box className="edit-component">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              readOnly={!editMode}
               value={dayjs(manufacturerCopy.foundationDate)}
               onChange={(e: Dayjs | null): void => {
                 if (e !== null) {
@@ -185,33 +163,25 @@ const ManufacturerDetails: React.FC = () => {
       key: 'employeesNumber',
       header: 'Employees Amount',
       renderComponent: (
-        editMode: boolean,
         manufacturerCopy: IManufacturer,
-        handleEdit: (key: keyof IManufacturer) => void,
         handleChange: (newManufacturer: Partial<IManufacturer>) => void,
       ): React.ReactNode => (
         <TextField
           className="edit-component"
-          InputProps={{
-            readOnly: !editMode,
-          }}
           type="number"
           value={manufacturerCopy.employeesNumber}
+          error={manufacturerCopy.employeesNumber < 1}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             handleChange({ employeesNumber: parseInt(e?.target.value ?? '0', 10) });
           }}
-          onClick={() => handleEdit('employeesNumber')}
         />
       ),
     },
     {
       key: 'cars',
       header: 'Owned Cars',
-      notEditable: true,
       renderComponent: (
-        editMode: boolean,
         manufacturerCopy: IManufacturer,
-        handleEdit: (key: keyof IManufacturer) => void,
         handleChange: (newManufacturer: Partial<IManufacturer>) => void,
       ): React.ReactNode => (
         <Autocomplete
@@ -232,7 +202,6 @@ const ManufacturerDetails: React.FC = () => {
               label="Factored cars"
               placeholder="Cars"
               id={`${availableCars.length}-available-cars-text`}
-              onClick={() => handleEdit('cars')}
             />
           )}
         />
@@ -241,20 +210,15 @@ const ManufacturerDetails: React.FC = () => {
   ];
 
   return (
-    <>
-      {typeof manufacturer === 'undefined'
-        ? <Loader standalone bigger /> : (
-          <Details<IManufacturer>
-            header="Manufacturer details"
-            object={manufacturer}
-            onUpdate={handleUpdate}
-            onDelete={handleDelete}
-            context={context}
-            isLoading={isLoading}
-          />
-        )}
-    </>
+    <Create<IManufacturer>
+      header="Manufacturer details"
+      object={manufacturer}
+      onSave={handleSave}
+      context={context}
+      isLoading={isLoading}
+      disabled={saveDisabled}
+    />
   );
 };
 
-export default React.memo(ManufacturerDetails);
+export default React.memo(ManufacturerCreate);

@@ -26,7 +26,9 @@ const Manufacturer = {
     params: { projection: projections.manufacturer.enriched },
   }),
   deleteManufacturer: (id: number): Promise<AxiosResponse<void>> => request.delete(`manufacturers/${id}`),
-  // createCar: (car: ICarPayload): Promise<AxiosResponse<ICar>> => request.post('cars', car),
+  createManufacturer: (
+    manufacturer: IManufacturerPayload,
+  ): Promise<AxiosResponse<IManufacturer>> => request.post('manufacturers', manufacturer),
 };
 
 export default Manufacturer;

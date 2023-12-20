@@ -58,7 +58,9 @@ const CarDetails: React.FC = () => {
         car.id,
         {
           ...newCar,
-          manufacturer: getApiManufacturerLink(newCar.manufacturer?.id as number),
+          manufacturer: typeof newCar.manufacturer?.id !== 'undefined'
+            ? getApiManufacturerLink(newCar.manufacturer?.id as number)
+            : null,
         },
       )
         .then(({ data }) => {

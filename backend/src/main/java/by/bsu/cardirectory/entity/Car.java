@@ -3,7 +3,9 @@ package by.bsu.cardirectory.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -30,11 +32,7 @@ public class Car {
 
     private Double fuelEfficiency;
 
-    @ManyToOne(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.REFRESH,
-    }, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "manufacturer_id")
     @ToString.Exclude
     private Manufacturer manufacturer;

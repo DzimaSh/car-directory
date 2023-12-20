@@ -28,7 +28,7 @@ CREATE TABLE car
     description     VARCHAR(100),
     release_date    TIMESTAMP WITHOUT TIME ZONE,
     fuel_efficiency REAL,
-    manufacturer_id BIGINT REFERENCES manufacturer(id) NOT NULL
+    manufacturer_id BIGINT REFERENCES manufacturer(id) ON DELETE SET NULL
 );
 
 ALTER TABLE car ALTER id

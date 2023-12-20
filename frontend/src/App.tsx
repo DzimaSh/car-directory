@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import './styles/App.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { Box } from '@mui/material';
 import { Footer, Header, MainRouter } from './components';
 import SideBar from './components/main/SideBar';
 
@@ -21,7 +22,9 @@ const App: React.FC = () => {
       <BrowserRouter>
         <Header onSideBarOpen={() => setSideBarOpen(true)} />
         <SideBar open={sideBarOpen} onClose={() => setSideBarOpen(false)} />
-        <MainRouter />
+        <Box className="main">
+          <MainRouter />
+        </Box>
         <Footer />
       </BrowserRouter>
     </QueryClientProvider>

@@ -2,9 +2,11 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 
 const Footer: React.FC = () => (
-  <Box sx={{
-    bgcolor: 'lightgrey', p: 2, position: 'fixed', bottom: 0, width: '100%',
-  }}
+  <Box
+    className="footer"
+    sx={{
+      bgcolor: 'lightgrey', p: 2,
+    }}
   >
     <Typography variant="body2" color="text.secondary" align="center">
       © 2023 Car Directory. All rights reserved.

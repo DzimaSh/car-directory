@@ -5,6 +5,10 @@
   --primary-blue: #1976d2;
 }
 
+.main {
+  flex: 1 0 auto;
+}
+
 .sidebar-header {
   height: var(--header-height);
   align-items: center;
@@ -90,4 +94,9 @@
   &:hover {
     background-color: #1976bf;
   }
+}
+
+.footer {
+  flex-shrink: 0;
+  width: auto;
 }

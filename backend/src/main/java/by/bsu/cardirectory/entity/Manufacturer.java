@@ -2,7 +2,7 @@ package by.bsu.cardirectory.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import net.minidev.json.annotate.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,10 +32,11 @@ public class Manufacturer {
 
     private Integer employeesNumber;
 
-    @OneToMany(cascade = CascadeType.ALL,
+    @OneToMany(
+            cascade = { CascadeType.REFRESH, CascadeType.MERGE },
+            targetEntity = Car.class,
             mappedBy = "manufacturer",
             fetch = FetchType.EAGER
     )
-    @JsonIgnore
     private List<Car> cars;
 }
